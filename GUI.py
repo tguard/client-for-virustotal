@@ -130,25 +130,36 @@ class SettingsWindow(Tkinter.Tk):
         self.initializeSettings()
 
     def initializeSettings(self):
+
         widgets = Widgets(frame=self.settingsFrame)
+
         # create label to the left of the 'resource' settings entry
         reportLabel = Tkinter.StringVar()
         widgets.createLabel(1, 0, 1, "EW", "black", None, Tkinter.CENTER, reportLabel, self.settingsFrame)
         reportLabel.set("Last Saved Report: ")
+
         # create label to hold the settings resource value
         inReport = Tkinter.StringVar()
         widgets.createLabel(2, 0, 3, "EW", "black", None, "w", inReport, self.settingsFrame)
-        inReport.set(self.settings.getFileName())
+        lastfile = self.settings.getFileName()
+        if lastfile is '':
+            inReport.set("None")
+        else:
+            inReport.set(self.settings.getFileName())
 
         apiLabel = Tkinter.StringVar()
         widgets.createLabel(1, 1, 1, "EW", "black", None, Tkinter.CENTER, apiLabel, self.settingsFrame)
+        apiLabel.set("API Key: ")
+
         inAPI = Tkinter.StringVar()
         widgets.createLabel(2, 1, 3, "EW", "black", None, "w", inAPI, self.settingsFrame)
-        apiLabel.set("API Key: ")
-        inAPI.set(self.settings.getAPI())
+        apikey = self.settings.getAPI()
+        if apikey is '':
+            inAPI.set("None")
+        else:
+            inAPI.set(self.settings.getAPI())
 
-        # create text entry box for inputting the API Key and Last Saved Report in settingsFrame
-        # don't bind any keys or functions to it
+        # create text entry for inputting the API key
         apiEntry = widgets.createEntry(2, 1, 3, "EW", inAPI, None, None, self.settingsFrame)
 
         # create Save/Cancel buttons for settingsFrame
@@ -156,7 +167,10 @@ class SettingsWindow(Tkinter.Tk):
         widgets.createButton(4, 3, 1, "EW", "Cancel", None, lambda: self.cancel(frame=self.settingsDialog), self.settingsFrame)
 
         self.grid_columnconfigure(0, weight=1)
-        self.update()
+        # prevents Tk window from popping up
+        self.withdraw()
+        # update remaining running processes
+        self.update_idletasks()
         self.resizable(True, True)
 #        self.geometry(self.geometry)
 
@@ -168,7 +182,7 @@ class SettingsWindow(Tkinter.Tk):
             self.settings.setAPI(apikey)
 
     def saveSettings(self, frame, newAPIKey):
-        print 'saveSettings()'
+        print "[+] Saving settings..."
         self.setAPIKey(newAPIKey)
         self.settings.updateConfig('apikey', newAPIKey)
         self.cancel(frame)

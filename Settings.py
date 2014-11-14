@@ -1,10 +1,13 @@
 __author__ = 'Thomas'
 import re
+from os import path
 
 class Settings(object):
 
     def __init__(self):
         print "[+] Initializing Settings class"
+        if not path.isfile('vt.conf'):
+            self.createConfig()
         # First initialize all settings to EMPTY, then read config file to get current settings
         self.parseConfig()
 
@@ -41,7 +44,6 @@ class Settings(object):
     def parseConfig(self):
         with open("vt.conf", "r") as conf:
             lines = conf.readlines()
-            # lines[0] = apikey, lines[1] = base, lines[2] = resource
             # strip lines[i] of '\n', then parse around ':::', then select the latter part of the line
             apikey = lines[0].strip().split(":::")[1]
             baseURL = lines[1].strip().split(":::")[1]
@@ -71,4 +73,12 @@ class Settings(object):
             for line in tmp:
                 conf.write(line+"\n")
         # close file for writing
+        conf.close()
+
+    def createConfig(self):
+        with open("vt.conf", "w") as conf:
+            conf.write("apikey:::\n")
+            conf.write("base:::https://www.virustotal.com/vtapi/v2/\n")
+            conf.write("resource:::\n")
+            conf.write("lastfile:::\n")
         conf.close()
