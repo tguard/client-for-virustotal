@@ -32,10 +32,10 @@ class Settings(object):
         print "[+} Setting filename to "+filename
         self.filename = filename
     def getResource(self):
-        print "[+] Getting resource id '"+self.resource+"'"
+        print "[+] Getting resource id "+self.resource
         return self.resource
     def setResource(self, newID):
-        print "[+] Setting resource id to '"+newID+"'"
+        print "[+] Setting resource id to "+newID
         self.resource = newID
 
     def parseConfig(self):
@@ -46,9 +46,11 @@ class Settings(object):
             apikey = lines[0].strip().split(":::")[1]
             baseURL = lines[1].strip().split(":::")[1]
             resource = lines[2].strip().split(":::")[1]
+            lastfile = lines[3].strip().split(":::")[1]
             self.setAPI(apikey)
             self.setBase(baseURL)
             self.setResource(resource)
+            self.setFileName(lastfile)
         conf.close()
 
     def updateConfig(self, key, val):

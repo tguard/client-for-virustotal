@@ -16,8 +16,8 @@ from Settings import *
 
 class Communicator(object):
 
-    def __init__(self):
-        self.settings = Settings()
+    def __init__(self, settings):
+        self.settings = settings
 
     def sendFile(self, filename):
         # if no file specified
@@ -72,12 +72,14 @@ class Communicator(object):
 
     # special version of prettyPrint that formats response{} for relevant data
     def printReport(self, response):
+        # get the name of the last scanned file from Settings(), then split it at each directory, and pick the last index
+        scannedfile = self.settings.getFileName().split('/')[-1]
         filename = "av_scans.log"
         output = open(filename, "w+")
         hashes = '-----------------------------------------------'
         print "\n" + hashes
         print response['verbose_msg']
-        print 'Returned Scan for', response['scan_date']
+        print 'Returned scan for', scannedfile, 'from', response['scan_date']
         print hashes
         print "Positives:", str(response['positives']) + '/' + str(response['total'])
         print
