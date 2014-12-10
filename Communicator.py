@@ -76,19 +76,22 @@ class Communicator(object):
         scannedfile = self.settings.getFileName().split('/')[-1]
         filename = "av_scans.log"
         output = open(filename, "w+")
-        hashes = '-----------------------------------------------'
+        hashes = '------------------------------------------------------------------------------------------'
         print "\n" + hashes
-        print response['verbose_msg']
-        print 'Returned scan for', scannedfile, 'from', response['scan_date']
+        print "\t\t"+response['verbose_msg']
+        print "\t\t"+'Returned scan for', scannedfile, 'from', response['scan_date']
         print hashes
-        print "Positives:", str(response['positives']) + '/' + str(response['total'])
-        print
+        print "Positives:", str(response['positives']) + '/' + str(response['total'])+"\n"
         print 'MD5:', response['md5']
         print 'SHA1:', response['sha1']
         print 'SHA256:', response['sha256'], "\n"
         print 'Virus scan results logged to', filename
+
         for scanner in response['scans']:
             # write the results of each AV scanner to a log file
             line = str(scanner.upper()) + ':' + str(response['scans'][scanner]) + "\n"
             output.write(line)
         output.close()
+
+        msg = hashes+"\n"+response['verbose_msg']+"\n"+"Returned scan for "+scannedfile+" from "+response['scan_date']+"\n"+hashes+"\n"+"Positives: "+str(response['positives'])+"/"+str(response['total'])+"\n\n"+"MD5: "+response['md5']+"\n"+"SHA1: "+response['sha1']+"\n"+"SHA256: "+response['sha256']+"\n\n"+"Virus scan results logged to "+filename+"\n"
+        return msg
